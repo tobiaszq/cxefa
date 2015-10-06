@@ -1,0 +1,77 @@
+#include <iostream>
+#include <stack>
+#include <queue>
+#include <vector>
+using namespace std;
+
+const int MAX=1000;
+
+int V,E;
+vector<int> G[MAX+1],trans[MAX+1];
+bool odw[MAX+1]={false};
+int p[MAX+1]={0};
+int nrSSS[MAX+1]={0};
+int t=0;
+int we[MAX+1],wy[MAX+1];
+stack<int> S;
+
+void wczyt()
+{
+    cin>>V>>E;
+    for (int i=0;i<E;i++)
+     {
+        int a,b; cin>>a>>b;
+        G[a].push_back(b);
+        trans[b].push_back(a);
+     }
+}
+
+void DFS_visit(int n)
+{
+odw[n]=true; we[n]=t++; // we[n]=t; t++;
+for (int i=0;i<G[n].size();i++)
+     if (!odw[G[n][i]])
+     { p[G[n][i]]=n;
+       DFS_visit(G[n][i]);
+     }
+wy[n]=t++; S.push(n);
+}
+
+void DFS()
+{
+for (int n=1; n<=V; n++)
+     if(!odw[n]) DFS_visit(n);
+}
+
+void SSS_visit(int n,int numerSSS)
+{
+odw[n]=true; we[n]=t++; // we[n]=t; t++;
+for (int i=0;i<G[n].size();i++)
+     if (!odw[G[n][i]])
+     { p[G[n][i]]=n;
+        nrSSS[G[n][i]]=numerSSS;
+       SSS_visit(G[n][i]);
+     }
+wy[n]=t++; S.push(n);
+}
+
+void SSS()
+{
+    int j=1;
+for (int n=1; n<=V; n++)
+     if(!odw[n])
+     {
+         SSS_visit(n);
+         j++;
+     }
+}
+
+main()
+{
+    wczyt();
+    DFS();
+    while (!S.empty())
+    {
+        cout<<S.top()<<endl; S.pop();
+    }
+}
